@@ -2,9 +2,9 @@ import  React from 'react'
 
 const DatosUsuario = React.createContext({
     idUser : 87,
-    userName : "omesa",
-    fullName : "Oscar Mesa",
-    lastName : "Mesa"
+    userName : "Jhonatan",
+    fullName : "Jhonatan quirama",
+    lastName : "Quirama"
 })
 
 export default DatosUsuario
