@@ -1,19 +1,31 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
+import FiltroPelicula from './FiltroPelicula'
+import DatosUsuario from '../DatosUsuarios'
 
 export default function VisorPeliculas(props) {
     const [peliculas, setPeliculas] = useState([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        fetch('https://api-movies-users.vercel.app/movies')
-            .then(r => r.json())
-            .then(movies => {
-                setPeliculas(movies)
-            })
+        async function obtenerPeliculasIniciales() {
+            let peliculas = await obtenerPeliculas()
+            setPeliculas(peliculas)
+            setLoading(false)
+        }
+        obtenerPeliculasIniciales()
     }, [])
 
-    return (
+    const obtenerPeliculas = async () => {
+        setLoading(true)
+        let respuesta = await fetch('https://api-movies-users.vercel.app/movies')
+        let peliculas = await respuesta.json()
+        return peliculas
+    }
+
+return (
         <section>
+            <FiltroPelicula obtenerPeliculas={obtenerPeliculas} setPeliculas={setPeliculas} loading={loading} setLoading={setLoading} />
             <table border="1">
                 <thead>
                     <tr>
@@ -34,16 +46,21 @@ export default function VisorPeliculas(props) {
                             <td>{pelicula.id}</td>
                             <td>{pelicula.title}</td>
                             <td>{pelicula.year}</td>
-                            <td><img src={pelicula.cover}/></td>
+                            <td><img src={pelicula.cover} alt={pelicula.title} /></td>
                             <td>{pelicula.description}</td>
                             <td>{pelicula.duration}</td>
                             <td>{pelicula.contentRating}</td>
-                            <td><a href={pelicula.source} target="_blank">enlace</a></td>
-                            <td><ul>{pelicula.tags.map(tag => <li>{tag}</li>)}</ul></td>
+                            <td><a href={pelicula.source} rel="noopener noreferrer">enlace</a></td>
+                            <td><ul>{pelicula.tags.map((tag, index) => <li key={index}>{tag}</li>)}</ul></td>
                         </tr>
                     })}
                 </tbody>
             </table>
+            <DatosUsuario.Consumer>
+                {usuario => <div>
+                    <p>Nombre de usuario: {usuario.userName}</p>
+                </div>}
+            </DatosUsuario.Consumer>
         </section>
     )
 }
