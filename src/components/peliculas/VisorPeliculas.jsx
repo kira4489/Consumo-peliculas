@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import FiltroPelicula from './FiltroPelicula'
-import DatosUsuario from '../DatosUsuarios'
+import DatosUsuario from '../../context/DatosUsuario'
+import VerPelicula from './VerPelicula'
 
 export default function VisorPeliculas(props) {
     const [peliculas, setPeliculas] = useState([])
@@ -23,8 +24,8 @@ export default function VisorPeliculas(props) {
         return peliculas
     }
 
-return (
-        <section>
+    return (
+        <>
             <FiltroPelicula obtenerPeliculas={obtenerPeliculas} setPeliculas={setPeliculas} loading={loading} setLoading={setLoading} />
             <table border="1">
                 <thead>
@@ -56,11 +57,32 @@ return (
                     })}
                 </tbody>
             </table>
+
             <DatosUsuario.Consumer>
-                {usuario => <div>
-                    <p>Nombre de usuario: {usuario.userName}</p>
-                </div>}
+                {(value) => {
+                    return <div>
+                        <p>Nombre usuario: {value.userName}</p>
+                        <p>Nombre: {value.fullName}</p>
+                        <p>Apellido: {value.lastName}</p>
+                    </div>
+                }}
             </DatosUsuario.Consumer>
-        </section>
+            <MiniPelicula />
+            <VerPelicula/>
+        </>
     )
+}
+
+function MiniPelicula(props) {
+    return <>
+        <b>Este es un miniComponente </b>
+        <DatosUsuario.Consumer>
+            {value => <>
+                <p>ID: {value.idUser}</p>
+                <ul>
+                    {value.professions !== undefined ? value.professions.map((profession,index) => <li key={index}>{profession}</li>):""}
+                </ul>
+            </>}
+        </DatosUsuario.Consumer>
+    </>
 }

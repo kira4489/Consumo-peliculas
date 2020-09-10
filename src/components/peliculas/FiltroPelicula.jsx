@@ -24,5 +24,3 @@ export default function FiltroPelicula({obtenerPeliculas,setPeliculas,...props})
         </div>
     )
 }
-
-

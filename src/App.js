@@ -7,18 +7,16 @@ import {
 } from "react-router-dom";
 import VisorPeliculas from './components/peliculas/VisorPeliculas';
 import InsertarPelicula from './components/peliculas/InsertarPelicula';
-import DatosUsuario from './components/DatosUsuarios'
-
+import DatosUsuario from './context/DatosUsuario';
 
 function App() {
   return (
     <div className="App">
+      
       <Router>
         <Switch>
           <Route path="/create">
-            <DatosUsuario.Provider value = "otro valor">
               <InsertarPelicula />
-            </DatosUsuario.Provider>
           </Route>
           <Route path="/update/:id">
             <VisorPeliculas />
@@ -30,7 +28,15 @@ function App() {
             <VisorPeliculas />
           </Route>
           <Route path="/">
-            <VisorPeliculas />
+              <DatosUsuario.Provider value = {{
+                    idUser : 90,
+                    userName : "pepito",
+                    fullName : "Pedro",
+                    lastName : "Martinéz", 
+                    professions : ["Ingeniero", "Test", "Test 1"]
+                }}>
+                <VisorPeliculas />
+              </DatosUsuario.Provider>
           </Route>
         </Switch>
       </Router>
