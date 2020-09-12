@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useEffect } from 'react'
 import FiltroPelicula from './FiltroPelicula'
 import DatosUsuario from '../../context/DatosUsuario'
 import VerPelicula from './VerPelicula'
+import { Link } from 'react-router-dom'
 
 export default function VisorPeliculas(props) {
     const [peliculas, setPeliculas] = useState([])
     const [loading, setLoading] = useState(false)
-
+    const contextUsuario = useContext(DatosUsuario)
     useEffect(() => {
         async function obtenerPeliculasIniciales() {
             let peliculas = await obtenerPeliculas()
@@ -27,37 +28,31 @@ export default function VisorPeliculas(props) {
     return (
         <>
             <FiltroPelicula obtenerPeliculas={obtenerPeliculas} setPeliculas={setPeliculas} loading={loading} setLoading={setLoading} />
-            <table border="1">
+            <table border="1" className="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Titulo</th>
                         <th>Año</th>
                         <th>Cover</th>
                         <th>Descripción</th>
-                        <th>Duración</th>
-                        <th>Calificación</th>
-                        <th>Fuente</th>
-                        <th>Tags</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {peliculas.map((pelicula, i) => {
                         return <tr key={i}>
-                            <td>{pelicula.id}</td>
                             <td>{pelicula.title}</td>
                             <td>{pelicula.year}</td>
                             <td><img src={pelicula.cover} alt={pelicula.title} /></td>
                             <td>{pelicula.description}</td>
-                            <td>{pelicula.duration}</td>
-                            <td>{pelicula.contentRating}</td>
-                            <td><a href={pelicula.source} rel="noopener noreferrer">enlace</a></td>
-                            <td><ul>{pelicula.tags.map((tag, index) => <li key={index}>{tag}</li>)}</ul></td>
+                            <td>
+                                <Link to={`view/${pelicula.id}`}>Ver</Link>
+                            </td>
                         </tr>
                     })}
                 </tbody>
             </table>
-
+            {/*}
             <DatosUsuario.Consumer>
                 {(value) => {
                     return <div>
@@ -67,8 +62,12 @@ export default function VisorPeliculas(props) {
                     </div>
                 }}
             </DatosUsuario.Consumer>
-            <MiniPelicula />
-            <VerPelicula/>
+            {*/}
+            <div>
+                <p>Nombre usuario: {contextUsuario.userName}</p>
+                <p>Nombre: {contextUsuario.fullName}</p>
+                <p>Apellido: {contextUsuario.lastName}</p>
+            </div>
         </>
     )
 }
